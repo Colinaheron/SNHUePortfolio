@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colin Aheron - Computer Science Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            padding: 100px 0;
+        }
+        .enhancement-card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        .enhancement-card:hover {
+            transform: translateY(-5px);
+        }
+        .project-preview {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .project-preview img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+        .project-preview:hover img {
+            transform: scale(1.05);
+        }
+        .section-heading {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: #0d47a1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-4 mb-4">Colin Aheron</h1>
+                    <p class="lead mb-4">Computer Science Portfolio - SNHU Capstone Project</p>
+                    <a href="shelter.html" class="btn btn-light btn-lg">View Enhanced Project</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Self-Assessment -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="section-heading">Professional Self-Assessment</h2>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Throughout my journey in the Computer Science program at SNHU, I've developed a comprehensive skill set that spans across various domains of software development. The capstone project, which involved transforming a Python-based animal shelter dashboard into a modern web application, exemplifies my growth and capabilities in the field.</p>
+                    
+                    <h3 class="h4 mt-4">Key Competencies</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Collaborative Development:</strong>
+                            <p>Implemented clear code organization and documentation practices, creating comprehensive README files and following industry-standard version control practices to facilitate team collaboration.</p>
+                        </li>
+                        <li class="mb-3">
+                            <strong>Stakeholder Communication:</strong>
+                            <p>Developed skills in creating clear user documentation, implementing intuitive UI/UX design, and providing clear feedback for user actions, ensuring effective communication with all stakeholders.</p>
+                        </li>
+                        <li class="mb-3">
+                            <strong>Technical Expertise:</strong>
+                            <p>Demonstrated proficiency in data structures, algorithms, software engineering, database management, and security implementation across various platforms and languages.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhancements Showcase -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="section-heading">Project Enhancements</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card enhancement-card">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">Software Design & Engineering</h3>
+                            <ul class="list-unstyled">
+                                <li>✓ Migrated from Python/Dash to client-side web application</li>
+                                <li>✓ Implemented responsive design with Bootstrap 5</li>
+                                <li>✓ Enhanced maintainability through modular code organization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card enhancement-card">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">Algorithms & Data Structure</h3>
+                            <ul class="list-unstyled">
+                                <li>✓ Optimized data filtering and search algorithms</li>
+                                <li>✓ Implemented efficient client-side data management</li>
+                                <li>✓ Enhanced data visualization with Chart.js and Leaflet.js</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card enhancement-card">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">Databases</h3>
+                            <ul class="list-unstyled">
+                                <li>✓ Transformed MongoDB to client-side storage</li>
+                                <li>✓ Implemented secure data persistence</li>
+                                <li>✓ Enhanced data integrity and validation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Preview -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="section-heading">Enhanced Project Preview</h2>
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="project-preview mb-4">
+                        <img src="Grazioso-Salvare-Logo.png" alt="Project Preview" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h3>Grazioso Salvare Animal Rescue Dashboard</h3>
+                    <p>This project demonstrates the transformation of a Python-based dashboard into a modern, client-side web application. The enhanced version maintains all original functionality while improving accessibility and deployment options.</p>
+                    <ul class="list-unstyled">
+                        <li>✓ Interactive data visualization</li>
+                        <li>✓ Role-based access control</li>
+                        <li>✓ Responsive design for all devices</li>
+                        <li>✓ Enhanced user experience</li>
+                    </ul>
+                    <div class="d-flex gap-3">
+                        <a href="shelter.html" class="btn btn-primary">View Enhanced Project</a>
+                        <a href="original.html" class="btn btn-outline-primary">View Original Version & Code Review</a>
+                    </div>
+                    <div class="mt-4">
+                        <h4>Code Review Video</h4>
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/5w_MHP0P5SU" title="Code Review Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">Colin Aheron</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">SNHU Computer Science Capstone Project</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

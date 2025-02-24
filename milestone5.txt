@@ -1,0 +1,85 @@
+CS Capstone Milestone 4 Narrative
+Colin Aheron
+
+The artifact is an interactive web dashboard for an animal shelter, originally created as a Python-based application using Dash and MongoDB during my CS-340 course. In this enhancement I transformed this server-dependent application into a client-side web application suitable for GitHub Pages deployment, maintaining all original functionality while improving accessibility and deployment options.
+
+Justification
+I selected this artifact because it demonstrates my ability to adapt and modernize applications while maintaining core functionality. The transformation from a Python/Dash application to a pure web-based solution showcases several key software development competencies:
+
+1. Architecture Migration
+- Successfully converted a server-dependent application to a client-side solution
+- Implemented local storage for data persistence, replacing MongoDB
+- Maintained security through client-side authentication and role-based access
+
+2. Modern Web Development
+- Utilized modern JavaScript (ES6+) features for efficient data handling
+- Implemented responsive design using Bootstrap 5
+- Integrated external libraries (Chart.js, Leaflet.js) for data visualization
+
+3. Software Design Patterns
+- Applied MVC pattern through separation of data (data.js), view (index.html), and controllers (script.js)
+- Implemented service layer pattern for data management
+- Used event-driven programming for interactive features
+
+The enhancement process improved the artifact by:
+- Eliminating server dependencies, making deployment simpler
+- Improving accessibility through static web hosting
+- Enhancing maintainability through modular code organization
+- Adding responsive design for better mobile support
+
+Course Outcomes Assessment
+This enhancement successfully met several key course outcomes:
+
+1. Employing strategies for building collaborative environments
+- Implemented clear code organization and documentation
+- Created comprehensive README for future contributors
+- Used industry-standard version control practices
+
+2. Developing security mindset
+- Maintained role-based access control
+- Implemented secure password handling
+- Protected sensitive operations through authorization checks
+
+3. Communicating with stakeholders
+- Created clear user documentation
+- Implemented intuitive UI/UX design
+- Provided clear feedback for user actions
+
+4. Designing and evaluating computing solutions
+- Maintained data structure across the migration
+- Improved system architecture for better scalability
+
+Learning and Challenges
+The enhancement process provided valuable learning experiences and challenges:
+
+Key Learning:
+1. Client-Side Architecture
+- Gained deeper understanding of browser storage capabilities
+- Learned to implement complex data management without a server
+- Developed strategies for maintaining data integrity in client-side applications
+
+2. Modern Web Development
+- Enhanced knowledge of modern JavaScript features
+- Improved understanding of responsive design principles
+- Learned to integrate multiple third-party libraries effectively
+
+3. Security Considerations
+- Developed understanding of client-side security limitations
+- Learned to implement secure data handling in browser storage
+- Gained experience in role-based access control implementation
+
+Challenges Faced:
+1. Data Persistence
+- Adapting MongoDB operations to local Storage
+- Maintaining data integrity without server-side validation
+- Implementing efficient data filtering and search
+
+2. Authentication
+- Implementing secure authentication without server-side verification
+- Managing user sessions in browser storage
+- Ensuring secure role-based access control
+
+
+The enhancement process taught me valuable lessons about modern web development, particularly the balance between functionality and architecture. It demonstrated that while server-side applications offer robust features, client-side solutions can provide similar functionality with improved accessibility and simpler deployment when properly designed.
+
+This experience reinforced the importance of understanding both front end and back end development, as well as the trade-offs involved in architectural decisions. It also highlighted the value of maintaining security and user experience regardless of the implementation approach.

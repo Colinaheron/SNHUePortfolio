@@ -1,0 +1,256 @@
+CS 499 Module One Assignment Template
+Colin Aheron
+
+Complete this template by replacing the bracketed text with the relevant information.
+
+    • Self-Introduction: Address all of the following questions to introduce yourself.
+
+    • How long have you been in the Computer Science program?
+I have been in the Computer Science program for two and a half years.
+
+    • What have you learned while in the program? List three of the most important concepts or skills you have learned.
+I’ve learned the importance of structured problem-solving, gained a strong foundation in programming languages like Python and Java, and developed skills in designing secure and efficient systems. These concepts have not only deepened my technical understanding but also prepared me to approach challenges with a critical and systematic mindset.
+    • Discuss the specific skills you aim to demonstrate through your enhancements to reach each of the course outcomes.
+I aim to demonstrate skills in creating dynamic, responsive interfaces and implementing interactive graphics using modern frameworks and tools, with a mind for modular code and security.
+    • How do the specific skills you will demonstrate align with your career plans related to your degree?
+These skills align with my career plans by equipping me to design engaging and user-friendly web applications, a crucial aspect of front-end development and interactive design.
+
+    • How does this contribute to the specialization you are targeting for your career?
+This directly contributes to my specialization in interactive graphics and front-end development, preparing me to build immersive user experiences and visually compelling interfaces.
+
+    • ePortfolio Set Up: 
+
+    • Submit a screen capture of your ePortfolio GitHub Pages home page that clearly shows your URL. 
+    • You already have a repository in GitHub where you uploaded projects in previous courses. Your ePortfolio will reside in GitHub but can link to work at other sites, such as Bitbucket.
+
+    • Use the GitHub Pages link in the Resource section for directions on:
+    • How to create your GitHub website and publish code to GitHub Pages 
+    • Issues, such as adding links to other sites 
+
+    • Paste a screenshot of your GitHub Pages home page with your URL clearly showing in the space below.
+
+
+
+https://github.com/Colinaheron
+
+
+    • Enhancement Plan: 
+
+    • Category One: Software Engineering and Design
+    • Select an artifact that is aligned with the software engineering and design category and explain its origin. Submit a file containing the code for the artifact you choose with your enhancement plan. 
+
+The artifact I will be enhancing is the final project from CS340 client server development. This project aimed to create a dashboard for a ficticious company, Grazioso Salvare to manage and visualize their data. The dashboard provides functionality to filter and display animal data, visualize data through interactive charts, and display geolocation data of animals. 
+
+The code for my artifact can be foud at https://github.com/Colinaheron/cs340
+
+Note: Your artifact may be work from the following courses:
+
+    • IT 145: Foundation in Application Development  
+    • CS 250: Software Development Lifecycle  
+    • CS 260: Data Structures and Algorithms  
+    • IT 315: Object Oriented Analysis and Design  
+    • CS 320: Software Testing, Automation, and Quality Assurance  
+    • CS 330: Computational Graphics and Visualization  
+    • CS 340: Advanced Programming Concepts  
+    • CS 350: Emerging Systems Architectures and Technologies  
+    • CS 360: Mobile Architecture and Programming  
+    • IT 365: Operating Environments  
+    • IT 380: Cybersecurity and Information Assurance  
+    • CS 405: Secure Coding  
+    • CS 410: Reverse Software engineering  
+    • IT 340: Network and Telecommunication Management  
+    • IT 380: Cybersecurity and Information Assurance  
+
+    • Describe a practical, well-illustrated plan for enhancement in alignment with the category, including a pseudocode or flowchart that illustrates the planned enhancement. 
+
+To enhance the project, I will introduce a role-based access control (RBAC) system for user authentication and authorization in the MongoDB CRUD application. This enhancement will add a security layer by restricting user access to specific operations based on roles (e.g., administrator, data analyst, and viewer). Additionally, I will refactor the dashboard to dynamically adjust its functionality based on the authenticated user's role. For instance:
+
+Administrator: Full CRUD access.
+Data Analyst: Can read and analyze data but cannot modify it.
+Viewer: Can only view dashboards and reports.
+
+PseudoCode: 
+
+Main Flow:
+1. Authenticate User:
+    Input: Username and Password
+    Validate against the user database
+    If valid:
+        Retrieve user role
+        Redirect to dashboard with role-based functionality
+    Else:
+        Show authentication error
+
+2. Implement Role-Based Permissions:
+    Define permissions for each role
+    Check permissions before performing CRUD operations
+
+3. Refactor Dashboard:
+    Adjust components based on user role:
+        If Admin:
+            Show all CRUD operations and tools
+        If Analyst:
+            Disable create/update/delete buttons
+        If Viewer:
+            Disable all interactive elements except read-only reports
+
+4. Enhance Security:
+    Encrypt user credentials in the database
+    Sanitize input to prevent injection attacks
+
+For this category of enhancement, consider improving a piece of software, transferring a project into a different language, reverse engineering a piece of software for a different operating system, or expanding a project’s complexity. These are just recommendations. Consider being creative and proposing an alternative enhancement to your instructor.
+
+Think about what additions to include to complete the enhancement criteria in this category. Since one example option is to port to a new language, that is the kind of scale that is expected. This does not mean you need to port to a new language but instead have an equivalent scale of enhancement. Underlying expectations of any enhancement include fixing errors, debugging, and cleaning up comments, but these are not enhancements themselves.   
+
+    • Explain how the planned enhancement will demonstrate specific skills and align with course outcomes. 
+
+    • Identify and describe the specific skills you will demonstrate that align with the course outcome.
+
+1. Implementing user authentication and role-based access control using MongoDB and Python.
+2. Designing modular and scalable systems that improve project functionality and usability.
+3. Applying secure coding principles to prevent unauthorized access and vulnerabilities.
+
+    • Select one or more of the course outcomes below that your enhancement will align with.
+
+Design and evaluate computing solutions that solve a problem using algorithmic principles and computer science practices.
+Develop a security mindset by exposing potential vulnerabilities, mitigating design flaws, and ensuring data security.
+Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in computing practices to implement value-driven solutions.
+
+Course Outcomes: 
+
+    • Employ strategies for building collaborative environments that enable diverse audiences to support organizational decision-making in the field of computer science.  
+    • Design, develop, and deliver professional-quality oral, written, and visual communications that are coherent, technically sound, and appropriately adapted to specific audiences and contexts.  
+    • Design and evaluate computing solutions that solve a given problem using algorithmic principles and computer science practices and standards appropriate to its solution while managing the trade-offs involved in design choices.  
+    • Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in computing practices for the purpose of implementing computer solutions that deliver value and accomplish industry-specific goals.
+    • Develop a security mindset that anticipates adversarial exploits in software architecture and designs to expose potential vulnerabilities, mitigate design flaws, and ensure privacy and enhanced security of data and resources.  
+
+    • Category Two: Algorithms and Data Structures
+
+    • Select an artifact that is aligned with the algorithms and data structures category and explain its origin. Submit a file containing the code for the artifact you choose with your enhancement plan. You may choose work from the courses listed under Category One.
+
+The artifact I will be enhancing is the final project from CS340 client server development. This project aimed to create a dashboard for a ficticious company, Grazioso Salvare to manage and visualize their data. The dashboard provides functionality to filter and display animal data, visualize data through interactive charts, and display geolocation data of animals. 
+
+The code for my artifact can be foud at https://github.com/Colinaheron/cs340
+
+
+    • Describe a practical, well-illustrated plan for enhancement in alignment with the category, including a pseudocode or flowchart that illustrates the planned enhancement.
+
+To enhance the project in this category, I will optimize the data retrieval process in the MongoDB CRUD application by implementing an efficient indexing strategy for common queries. The current implementation fetches data with the find method without indexing, which can be inefficient for large datasets. The enhancement will involve creating custom indexes for frequently queried fields (e.g., breed, age, and location), improving the overall query performance and reducing time complexity for read operations. Additionally, I will implement caching mechanisms for frequently accessed data to further optimize performance.
+
+PseudoCode: 
+
+1. Index Creation:
+    Define indexes for frequently queried fields (e.g., 'breed', 'age', 'location')
+    MongoDB Command: collection.create_index([("breed", ASCENDING), ("age", ASCENDING)])
+
+2. Query Optimization:
+    If query contains 'breed' or 'age' filter, use the index for fast lookup
+    MongoDB Command: collection.find({'breed': 'Labrador Retriever'}).hint([("breed", ASCENDING)])
+
+3. Caching Implementation:
+    Store frequently accessed query results in memory (e.g., using a dictionary or Redis)
+    Before querying the database, check if the result is cached
+    If cached, return the result from memory; otherwise, perform the query and cache the result
+
+4. Cache Invalidation:
+    Invalidate cached data when updates are made to the database (e.g., after CRUD operations)
+    Clear cache after data modification to ensure data consistency
+
+5. Enhanced Query Flow:
+    Query received → Check cache → If data is cached, return it → If not, query database → Cache and return result
+
+For this category of enhancement, consider improving the efficiency of a project or expanding the complexity of the use of data structures and algorithms for your artifact. These are just recommendations. Consider being creative and proposing an alternative enhancement to your instructor. Note: You only need to choose one type of enhancement per category. 
+ 
+Think about what additions to include to complete the enhancement criteria in this category. Since one example option is to port to a new language, that is the kind of scale that is expected. Perhaps you might increase the efficiency and time complexity of an algorithm in an application and detail the logic of the increased time complexity. Remember, you do not need to port to a new language but instead have an equivalent scale of enhancement. Underlying expectations of any enhancement include fixing errors, debugging, and cleaning up comments, but these are not enhancements themselves.  
+
+    • Explain how the planned enhancement will demonstrate specific skills and align with course outcomes. 
+
+    • Identify and describe the specific skills you will demonstrate to align with the course outcome.
+
+1. Implementing indexing strategies in MongoDB to optimize query performance and reduce time complexity.
+2. Applying caching mechanisms to reduce database load and improve response times.
+3. Understanding and applying algorithmic principles to optimize resource utilization.
+4. Managing trade-offs in design decisions related to performance optimization and data consistency.
+
+    • Select one or more of the course outcomes listed under Category One that your enhancement will align with.
+
+Design and evaluate computing solutions that solve a problem using algorithmic principles and computer science practices, specifically optimizing data retrieval using indexing and caching techniques.
+Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in computing practices for the purpose of implementing computer solutions that deliver value and accomplish industry-specific goals, such as improving system performance.
+
+    • Category Three: Databases
+
+    • Select an artifact that is aligned with the databases category and explain its origin. Submit a file containing the code for the artifact you choose with your enhancement plan. You may choose work from the courses listed under Category One.
+
+The artifact I will be enhancing is the final project from CS340 client server development. This project aimed to create a dashboard for a ficticious company, Grazioso Salvare to manage and visualize their data. The dashboard provides functionality to filter and display animal data, visualize data through interactive charts, and display geolocation data of animals. 
+
+The code for my artifact can be foud at https://github.com/Colinaheron/cs340
+
+
+    • Describe a practical, well-illustrated plan for enhancement in alignment with the category, including a pseudocode or flowchart that illustrates the planned enhancement.
+
+For the database category, I will enhance the project by integrating the MongoDB interface with an HTML/JavaScript frontend to allow for interactive database management directly from the user interface. Currently, the MongoDB operations are handled only through Python, and the frontend merely displays data. The enhancement will include building a simple CRUD interface in HTML and JavaScript that can communicate with the backend Python API via RESTful APIs to manage the animal shelter data in MongoDB. This full-stack approach will allow users to interact with the data more intuitively, including the ability to add, update, and delete records without interacting directly with the backend.
+
+PseudoCode:
+
+1. Create Flask REST API:
+    - Endpoint /create: Accepts POST requests with animal data, inserts into MongoDB
+    - Endpoint /read: Accepts GET requests, retrieves data from MongoDB and returns as JSON
+    - Endpoint /update: Accepts PUT requests with updated animal data, modifies existing record in MongoDB
+    - Endpoint /delete: Accepts DELETE requests, removes an animal record from MongoDB
+
+2. Frontend (HTML/JS):
+    - Display animal data in a table with sorting, filtering, and pagination
+    - Create a form for adding new animal records
+    - Include buttons for updating or deleting existing records
+    - Use Fetch API to send requests to Flask API
+        - For example, to add a new record, send POST request to /create endpoint with form data
+        - For deleting a record, send DELETE request to /delete endpoint with animal's ID
+    
+3. Example of Fetch request in JS (Frontend):
+    function createAnimal(data) {
+        fetch('/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => { /* handle success */ })
+        .catch(error => { /* handle error */ });
+    }
+    
+4. Enhance User Interface:
+    - Add features like a search bar, table pagination, and filter options based on animal attributes (e.g., breed, age)
+
+For this category of enhancement, consider adding more advanced concepts of MySQL, incorporating data mining, creating a MongoDB interface with HTML/JavaScript, or building a full stack with a different programming language for your artifact. These are just recommendations; consider being creative and proposing an alternative enhancement to your instructor. Note: You only need to choose one type of enhancement per category.
+
+Think about what additions to include to complete the enhancement criteria in this category. Since one example option is to port to a new language, that is the kind of scale that is expected. Perhaps you might increase the efficiency and time complexity of an algorithm in an application and detail the logic of the increased time complexity. Remember, you do not need to port to a new language but instead have an equivalent scale of enhancement. Underlying expectations of any enhancement include fixing errors, debugging, and cleaning up comments, but these are not enhancements themselves.
+
+    • Explain how the planned enhancement will demonstrate specific skills and align with course outcomes. 
+
+    • Identify and describe the specific skills you will demonstrate that align with the course outcome.
+
+Developing REST APIs: Building a backend API to interact with MongoDB using Flask and handling CRUD operations.
+Frontend Development: Designing and implementing an interactive frontend using HTML, JavaScript, and AJAX for dynamic data handling.
+Integrating Frontend and Backend: Ensuring smooth communication between the frontend and backend, making the application fully interactive.
+Data Validation: Implementing validation on both frontend and backend to ensure data integrity and error-free operations.
+    • Select one or more of the course outcomes listed under Category One that your enhancement will align with.
+
+Design, develop, and deliver professional-quality oral, written, and visual communications that are coherent, technically sound, and appropriately adapted to specific audiences and contexts.
+Design and evaluate computing solutions that solve a given problem using algorithmic principles and computer science practices and standards appropriate to its solution, while managing trade-offs involved in design choices (e.g., frontend-backend integration).
+Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in computing practices for the purpose of implementing computer solutions that deliver value and accomplish industry-specific goals, such as database management, web development, and API integration.
+
+    • ePortfolio Overall Skill Set
+
+    • Accurately describe the skill set to be illustrated by the ePortfolio overall.
+    • Skills and outcomes planned to be illustrated in the code review
+
+Clean, readable code following industry-standard conventions.
+Efficient use of libraries and frameworks (Flask for backend, MongoDB for database, and JavaScript for frontend). Adhering to best practices for user authentication and session management.
+
+    • Skills and outcomes planned to be illustrated in the narratives
+
+Problem Solving and Algorithmic Thinking, Project Planning and Time Management.
+
+    • Skills and outcomes planned to be illustrated in the professional self-assessment
+
+Self-Evaluation of Technical Skills, Security and Best Practices, Career and Industry Readiness, Feedback Incorporation and Adaptability.

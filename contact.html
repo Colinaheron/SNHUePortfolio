@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Grazioso Salvare</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="shelter.html">
+                <img src="Grazioso-Salvare-Logo.png" alt="Grazioso Salvare Logo" class="nav-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="shelter.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="services.html">Training Programs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="success-stories.html">Success Stories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Training Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section-small">
+        <div class="container">
+            <div class="row align-items-center py-5">
+                <div class="col-lg-8">
+                    <h1 class="display-4">Contact Us</h1>
+                    <p class="lead">Get in Touch with Our Team</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <div class="row g-4">
+            <!-- Contact Form -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Send Us a Message</h2>
+                        <form id="contact-form" class="mt-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name" class="form-label">Your Name</label>
+                                        <input type="text" class="form-control" id="name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="subject" class="form-label">Subject</label>
+                                        <select class="form-select" id="subject" required>
+                                            <option value="">Select a subject</option>
+                                            <option value="training">Training Programs</option>
+                                            <option value="partnership">Partnership Opportunities</option>
+                                            <option value="volunteer">Volunteer Information</option>
+                                            <option value="other">Other Inquiry</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="message" class="form-label">Message</label>
+                                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Send Message</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>Our Location</h3>
+                        <p>
+                            123 Rescue Drive<br>
+                            Austin, TX 78701<br>
+                            United States
+                        </p>
+                        <hr>
+                        <h3>Contact Info</h3>
+                        <p>
+                            <strong>Phone:</strong><br>
+                            (555) 123-4567
+                        </p>
+                        <p>
+                            <strong>Email:</strong><br>
+                            info@grazioso-salvare.com
+                        </p>
+                        <hr>
+                        <h3>Hours of Operation</h3>
+                        <p>
+                            Monday - Friday: 8:00 AM - 6:00 PM<br>
+                            Saturday: 9:00 AM - 4:00 PM<br>
+                            Sunday: Closed
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Emergency Response</h3>
+                        <p>For rescue operations and emergency response, we are available 24/7.</p>
+                        <p class="mb-0"><strong>Emergency Hotline:</strong><br>
+                        (555) 911-4567</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partnership Section -->
+        <section class="mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h2>Partner With Us</h2>
+                            <p class="lead mb-4">Join our network of rescue organizations and emergency response teams.</p>
+                            <p>We work closely with animal shelters, rescue organizations, and emergency response teams worldwide. If you're interested in partnering with Grazioso Salvare, we'd love to hear from you.</p>
+                            <a href="#" class="btn btn-primary">Learn About Partnerships</a>
+                        </div>
+                        <div class="col-lg-4 text-center">
+                            <img src="https://images.unsplash.com/photo-1582553081586-d43973b6c60e" alt="Partnership" class="img-fluid rounded">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <img src="Grazioso-Salvare-Logo.png" alt="Grazioso Salvare Logo" class="footer-logo mb-3">
+                    <p>Transforming shelter animals into rescue heroes through specialized training programs.</p>
+                </div>
+                <div class="col-lg-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Programs</a></li>
+                        <li><a href="success-stories.html">Success Stories</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Training Programs</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="services.html#water">Water Rescue</a></li>
+                        <li><a href="services.html#mountain">Mountain Rescue</a></li>
+                        <li><a href="services.html#disaster">Disaster Response</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li>123 Rescue Drive</li>
+                        <li>Austin, TX 78701</li>
+                        <li>Tel: (555) 123-4567</li>
+                        <li>Email: info@grazioso-salvare.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="small mb-0">&copy; 2024 Grazioso Salvare. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="small mb-0">Website by Colin Aheron - SNHU Computer Science Capstone Project</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grazioso Salvare - Animal Rescue Training</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="Grazioso-Salvare-Logo.png" alt="Grazioso Salvare Logo" class="nav-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="services.html">Training Programs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="success-stories.html">Success Stories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Training Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6">
+                    <h1 class="display-4 mb-4">Transforming Shelter Animals into Rescue Heroes</h1>
+                    <p class="lead mb-4">At Grazioso Salvare, we give rescue animals a second chance by training them for specialized rescue operations worldwide.</p>
+                    <div class="d-flex gap-3">
+                        <a href="services.html" class="btn btn-primary btn-lg">Our Programs</a>
+                        <a href="success-stories.html" class="btn btn-outline-light btn-lg">Success Stories</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Programs -->
+    <section class="featured-programs py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Specialized Training Programs</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1530126483408-aa533e55bdb2" class="card-img-top" alt="Water Rescue">
+                        <div class="card-body">
+                            <h3 class="h5">Water Rescue</h3>
+                            <p>Our water rescue program trains dogs for maritime search and rescue operations, beach patrol, and water emergency response.</p>
+                            <a href="services.html#water" class="btn btn-outline-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1530126483408-aa533e55bdb2" class="card-img-top" alt="Mountain Rescue">
+                        <div class="card-body">
+                            <h3 class="h5">Mountain & Wilderness Rescue</h3>
+                            <p>Specialized training for search and rescue operations in challenging mountain and wilderness environments.</p>
+                            <a href="services.html#mountain" class="btn btn-outline-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1583336663277-620dc1996580" class="card-img-top" alt="Disaster Response">
+                        <div class="card-body">
+                            <h3 class="h5">Disaster Response</h3>
+                            <p>Training for urban search and rescue, disaster response, and individual tracking in emergency situations.</p>
+                            <a href="services.html#disaster" class="btn btn-outline-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Stats -->
+    <section class="impact-stats py-5 bg-light">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <h3 class="display-4">250+</h3>
+                        <p>Animals Trained</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <h3 class="display-4">45</h3>
+                        <p>Partner Organizations</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <h3 class="display-4">150+</h3>
+                        <p>Successful Rescues</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <h3 class="display-4">12</h3>
+                        <p>Countries Served</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Success Stories -->
+    <section class="success-stories py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Recent Success Stories</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb" class="card-img-top" alt="Success Story">
+                        <div class="card-body">
+                            <h3 class="h5">Max: From Shelter to Mountain Rescue Hero</h3>
+                            <p>Discover how Max, a former shelter dog, became a vital member of our mountain rescue team, saving lives in the Rockies.</p>
+                            <a href="success-stories.html" class="btn btn-outline-primary">Read Story</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1544568100-847a948585b9" class="card-img-top" alt="Success Story">
+                        <div class="card-body">
+                            <h3 class="h5">Luna's Journey to Water Rescue Excellence</h3>
+                            <p>Learn about Luna's transformation from a timid shelter rescue to a confident water rescue specialist.</p>
+                            <a href="success-stories.html" class="btn btn-outline-primary">Read Story</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <img src="Grazioso-Salvare-Logo.png" alt="Grazioso Salvare Logo" class="footer-logo mb-3">
+                    <p>Transforming shelter animals into rescue heroes through specialized training programs.</p>
+                </div>
+                <div class="col-lg-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Programs</a></li>
+                        <li><a href="success-stories.html">Success Stories</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Training Programs</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="services.html#water">Water Rescue</a></li>
+                        <li><a href="services.html#mountain">Mountain Rescue</a></li>
+                        <li><a href="services.html#disaster">Disaster Response</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li>123 Rescue Drive</li>
+                        <li>Austin, TX 78701</li>
+                        <li>Tel: (555) 123-4567</li>
+                        <li>Email: info@grazioso-salvare.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="small mb-0">&copy; 2024 Grazioso Salvare. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="small mb-0">Website by Colin Aheron - SNHU Computer Science Capstone Project</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
