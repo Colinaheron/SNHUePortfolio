@@ -1,0 +1,40 @@
+# Site settings
+title: Animal Shelter Dashboard
+description: A dashboard for animal shelter outcomes analysis
+baseurl: "/cs340" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site
+
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-minimal
+
+# Exclude files from processing
+exclude:
+  - .git/
+  - .gitignore
+  - Dashboard.ipynb
+  - ProjectTwoDashboard (old).ipynb
+  - mongoCRUD.py
+  - original.py
+  - aac_shelter_outcomes_full.csv
+  - aac_shelter_outcomes.csv
+  - milestone1.txt
+  - milestone5.txt
+  - "*.mp4"
+
+# Include specific files
+include:
+  - _images
+  - _data
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+
+# Default layout
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
