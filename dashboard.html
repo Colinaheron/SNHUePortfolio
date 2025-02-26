@@ -7,8 +7,113 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
     <link rel="stylesheet" href="styles.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <!-- Custom Dashboard Styles -->
+    <style>
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            flex-direction: column;
+        }
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .filter-panel {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .filter-title {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        .filter-row {
+            margin-bottom: 10px;
+        }
+        .stats-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        .stats-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .stats-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        #data-table tbody tr.selected {
+            background-color: rgba(13, 110, 253, 0.2) !important;
+        }
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .error-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body class="animated-bg">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+    
+    <!-- Accessibility Controls -->
+    <div class="accessibility-controls">
+        <button class="high-contrast-toggle" aria-label="Toggle high contrast mode" title="Toggle high contrast mode">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2v20"/>
+            </svg>
+        </button>
+        <div class="sensory-break" role="button" aria-label="Take a sensory break" tabindex="0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+        </div>
+    </div>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
@@ -96,15 +201,74 @@
 
         <!-- Dashboard Content (Initially Hidden) -->
         <div id="dashboard-content" style="display: none;">
-            <!-- Filter Dropdown -->
+            <!-- Statistics Cards -->
             <div class="row mb-4">
-                <div class="col">
-                    <select class="form-select" id="rescue-type" aria-label="Select rescue type">
-                        <option value="Reset">Select Rescue Type</option>
-                        <option value="Water">Water Rescue</option>
-                        <option value="Mountain">Mountain or Wilderness Rescue</option>
-                        <option value="Disaster">Disaster or Individual Tracking</option>
-                    </select>
+                <div class="col-md-4">
+                    <div class="stats-card text-center">
+                        <div class="stats-value" id="total-count">0</div>
+                        <div class="stats-label">Total Animals</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card text-center">
+                        <div class="stats-value" id="most-common-type">None</div>
+                        <div class="stats-label">Most Common Animal Type</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card text-center">
+                        <div class="stats-value" id="adoption-rate">0.0%</div>
+                        <div class="stats-label">Adoption Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Filter Panel -->
+            <div class="filter-panel mb-4">
+                <h5 class="filter-title">Filter Animals</h5>
+                <div class="row filter-row">
+                    <div class="col-md-3">
+                        <label for="rescue-type" class="form-label">Rescue Type</label>
+                        <select class="form-select" id="rescue-type" aria-label="Select rescue type">
+                            <option value="Reset">All Types</option>
+                            <option value="Water">Water Rescue</option>
+                            <option value="Mountain">Mountain or Wilderness Rescue</option>
+                            <option value="Disaster">Disaster or Individual Tracking</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="animal-type-filter" class="form-label">Animal Type</label>
+                        <select class="form-select" id="animal-type-filter" aria-label="Filter by animal type">
+                            <option value="">All Types</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="outcome-type-filter" class="form-label">Outcome</label>
+                        <select class="form-select" id="outcome-type-filter" aria-label="Filter by outcome type">
+                            <option value="">All Outcomes</option>
+                            <option value="Adoption">Adoption</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Return to Owner">Return to Owner</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sex-filter" class="form-label">Sex</label>
+                        <select class="form-select" id="sex-filter" aria-label="Filter by sex">
+                            <option value="">All</option>
+                            <option value="Intact Male">Intact Male</option>
+                            <option value="Neutered Male">Neutered Male</option>
+                            <option value="Intact Female">Intact Female</option>
+                            <option value="Spayed Female">Spayed Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 text-end">
+                        <button class="btn btn-secondary" id="reset-filters">Reset All Filters</button>
+                    </div>
                 </div>
             </div>
 
@@ -200,10 +364,14 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Custom Scripts -->
     <script src="data.js"></script>
+    <script src="csv_loader.js"></script>
+    <script src="dashboard.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

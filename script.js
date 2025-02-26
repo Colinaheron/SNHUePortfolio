@@ -1,292 +1,136 @@
-// BCrypt implementation for password hashing (simplified version for demo)
-const bcrypt = {
-    hashSync: (password) => {
-        // In a real implementation, this would use actual BCrypt
-        return `$2a$10$${btoa(password)}`;
-    },
-    compareSync: (password, hash) => {
-        // In a real implementation, this would use actual BCrypt comparison
-        return `$2a$10$${btoa(password)}` === hash;
-    }
-};
+// Custom cursor
+const cursor = document.querySelector('.cursor');
+const cursorDot = document.querySelector('.cursor-dot');
 
-let currentUser = null;
-let map = null;
-let chart = null;
-let selectedRow = null;
-
-// Initialize the dashboard
-document.addEventListener('DOMContentLoaded', () => {
-    initializeMap();
-    setupEventListeners();
-    initializeChart();
+document.addEventListener('mousemove', (e) => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    cursorDot.style.left = e.clientX + 'px';
+    cursorDot.style.top = e.clientY + 'px';
 });
 
-// Initialize Leaflet map
-function initializeMap() {
-    // Ensure map container is visible and sized before initialization
-    const mapContainer = document.getElementById('map');
-    if (mapContainer) {
-        mapContainer.style.height = '400px';
-        mapContainer.style.width = '100%';
-        map = L.map('map').setView([30.2672, -97.7431], 11);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            maxZoom: 19,
-            minZoom: 5
-        }).addTo(map);
-
-        // Add a default marker for Austin Animal Center's actual location
-        L.marker([30.2672, -97.7431])
-            .bindPopup('Austin Animal Center')
-            .addTo(map)
-            .openPopup();
-        
-        // Ensure the map is centered on the marker
-        setTimeout(() => {
-            map.setView([30.2672, -97.7431], 11);
-        }, 200);
-        
-        // Force a resize event after initialization
-        setTimeout(() => {
-            map.invalidateSize();
-        }, 100);
-    }
-}
-
-// Initialize Chart.js pie chart
-function initializeChart() {
-    const ctx = document.getElementById('chart').getContext('2d');
-    chart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: [],
-            datasets: [{
-                data: [],
-                backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                    '#9966FF'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Animal Breeds Distribution'
-                }
-            }
-        }
+// Cursor interactions
+document.querySelectorAll('a, button, .card, .sensory-break').forEach(element => {
+    element.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'scale(1.5)';
+        cursor.style.border = '2px solid #0d6efd';
     });
-}
+    
+    element.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'scale(1)';
+        cursor.style.border = '2px solid #fff';
+    });
+});
 
-// Setup event listeners
-function setupEventListeners() {
-    // Authentication
-    document.getElementById('login-form').addEventListener('submit', handleLogin);
-    document.getElementById('register-form').addEventListener('submit', handleRegister);
+// Scroll progress
+window.addEventListener('scroll', () => {
+    const scrollProgress = document.querySelector('.scroll-progress');
+    const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    scrollProgress.style.width = `${scrollPercent}%`;
+});
 
-    // Dashboard controls
-    document.getElementById('rescue-type').addEventListener('change', handleRescueTypeChange);
-    document.getElementById('create-btn').addEventListener('click', handleCreate);
-    document.getElementById('update-btn').addEventListener('click', handleUpdate);
-    document.getElementById('delete-btn').addEventListener('click', handleDelete);
-}
+// Sensory break functionality
+const sensoryBreakBtn = document.querySelector('.sensory-break');
+let isBreakActive = false;
+let breakTimer;
 
-// Authentication handlers
-function handleLogin(e) {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const user = DataService.findUser(username);
-
-    if (user && bcrypt.compareSync(password, user.password)) {
-        currentUser = user;
-        document.getElementById('login-output').innerHTML = 
-            `<div class="alert alert-success">Welcome ${username}! Role: ${user.role}</div>`;
-        document.getElementById('auth-section').style.display = 'none';
-        document.getElementById('dashboard-content').style.display = 'block';
-        
-        if (user.role === 'Admin') {
-            document.getElementById('crud-buttons').style.display = 'block';
-        }
-        
-        updateDashboard();
+sensoryBreakBtn.addEventListener('click', () => {
+    if (!isBreakActive) {
+        startSensoryBreak();
     } else {
-        document.getElementById('login-output').innerHTML = 
-            '<div class="alert alert-danger">Invalid credentials</div>';
+        endSensoryBreak();
     }
-}
+});
 
-function handleRegister(e) {
-    e.preventDefault();
-    const username = document.getElementById('register-username').value;
-    const password = document.getElementById('register-password').value;
-    const role = document.getElementById('register-role').value;
-
-    if (!username || !password || !role) {
-        document.getElementById('register-output').innerHTML = 
-            '<div class="alert alert-danger">All fields are required</div>';
-        return;
-    }
-
-    if (DataService.findUser(username)) {
-        document.getElementById('register-output').innerHTML = 
-            '<div class="alert alert-danger">Username already exists</div>';
-        return;
-    }
-
-    const hashedPassword = bcrypt.hashSync(password);
-    DataService.addUser(username, hashedPassword, role);
+function startSensoryBreak() {
+    isBreakActive = true;
+    document.body.classList.add('focus-mode');
+    sensoryBreakBtn.style.backgroundColor = '#0d6efd';
+    sensoryBreakBtn.style.color = '#fff';
     
-    document.getElementById('register-output').innerHTML = 
-        '<div class="alert alert-success">Registration successful</div>';
-}
-
-// Dashboard update functions
-function updateDashboard(rescueType = 'Reset') {
-    const animals = DataService.getFilteredAnimals(rescueType);
-    updateTable(animals);
-    updateChart(animals);
+    // Set a 2-minute timer
+    breakTimer = setTimeout(() => {
+        endSensoryBreak();
+    }, 120000); // 2 minutes
     
-    // Select first row by default if no row is selected
-    if (animals.length > 0) {
-        if (selectedRow === null) {
-            selectedRow = 0;
-            const tbody = document.querySelector('#data-table tbody');
-            if (tbody.rows[0]) {
-                tbody.rows[0].classList.add('selected-row');
-            }
-        }
-        updateMap(animals[selectedRow]);
-    }
+    // Add pulsing animation to the button
+    sensoryBreakBtn.style.animation = 'pulse 2s infinite';
 }
 
-function updateTable(animals) {
-    const tbody = document.querySelector('#data-table tbody');
-    tbody.innerHTML = '';
+function endSensoryBreak() {
+    isBreakActive = false;
+    document.body.classList.remove('focus-mode');
+    sensoryBreakBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+    sensoryBreakBtn.style.color = '#000';
+    clearTimeout(breakTimer);
+    sensoryBreakBtn.style.animation = 'float 3s ease-in-out infinite';
+}
 
-    animals.forEach((animal, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${animal.name || 'N/A'}</td>
-            <td>${animal.animalType}</td>
-            <td>${animal.breed}</td>
-            <td>${animal.age}</td>
-            <td>${animal.sexUponOutcome}</td>
-            <td>${animal.locationLat.toFixed(4)}, ${animal.locationLong.toFixed(4)}</td>
-        `;
-
-        row.addEventListener('click', () => {
-            if (selectedRow !== null) {
-                tbody.rows[selectedRow].classList.remove('selected-row');
-            }
-            selectedRow = index;
-            row.classList.add('selected-row');
-            updateMap(animal);
-        });
+// Add hover animation to cards
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const angleX = (y - centerY) / 20;
+        const angleY = (centerX - x) / 20;
+        
+        card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale3d(1.02, 1.02, 1.02)`;
     });
-}
-
-function updateChart(animals) {
-    const breedCounts = animals.reduce((acc, animal) => {
-        acc[animal.breed] = (acc[animal.breed] || 0) + 1;
-        return acc;
-    }, {});
-
-    chart.data.labels = Object.keys(breedCounts);
-    chart.data.datasets[0].data = Object.values(breedCounts);
-    chart.update();
-}
-
-function updateMap(animal) {
-    map.setView([animal.locationLat, animal.locationLong], 13);
-    map.eachLayer((layer) => {
-        if (layer instanceof L.Marker) {
-            map.removeLayer(layer);
-        }
-    });
-
-    L.marker([animal.locationLat, animal.locationLong])
-        .bindPopup(`
-            <b>${animal.name || 'N/A'}</b><br>
-            ${animal.breed}<br>
-            ${animal.age}<br>
-            ${animal.sexUponOutcome}
-        `)
-        .addTo(map)
-        .openPopup();
-}
-
-// Event handlers
-function handleRescueTypeChange(e) {
-    const rescueType = e.target.value;
-    updateDashboard(rescueType);
-}
-
-function handleCreate() {
-    if (!currentUser || currentUser.role !== 'Admin') {
-        alert('Permission denied');
-        return;
-    }
-
-    const newAnimal = {
-        animalId: `A${Date.now().toString().slice(-6)}`,
-        name: prompt('Enter animal name:') || '',
-        animalType: prompt('Enter animal type:'),
-        breed: prompt('Enter breed:'),
-        age: prompt('Enter age:'),
-        sexUponOutcome: prompt('Enter sex:'),
-        locationLat: parseFloat(prompt('Enter latitude:')),
-        locationLong: parseFloat(prompt('Enter longitude:')),
-        outcomeType: 'Available',
-        dateOfBirth: new Date().toISOString().split('T')[0],
-        datetime: new Date().toISOString()
-    };
-
-    if (!newAnimal.animalType || !newAnimal.breed) {
-        alert('Animal type and breed are required');
-        return;
-    }
-
-    DataService.addAnimal(newAnimal);
-    updateDashboard(document.getElementById('rescue-type').value);
-}
-
-function handleUpdate() {
-    if (!currentUser || currentUser.role !== 'Admin' || selectedRow === null) {
-        alert('Select a row and ensure you have admin privileges');
-        return;
-    }
-
-    const animals = DataService.getFilteredAnimals(document.getElementById('rescue-type').value);
-    const animal = animals[selectedRow];
     
-    const updatedData = {
-        name: prompt('Enter new name:', animal.name) || animal.name,
-        breed: prompt('Enter new breed:', animal.breed) || animal.breed,
-        age: prompt('Enter new age:', animal.age) || animal.age,
-        sexUponOutcome: prompt('Enter new sex:', animal.sexUponOutcome) || animal.sexUponOutcome
-    };
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'none';
+    });
+});
 
-    DataService.updateAnimal(animal.animalId, updatedData);
-    updateDashboard(document.getElementById('rescue-type').value);
-}
+// Add pulse animation to buttons
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('mouseenter', () => {
+        button.style.animation = 'pulse 1s infinite';
+    });
+    
+    button.addEventListener('mouseleave', () => {
+        button.style.animation = 'none';
+    });
+});
 
-function handleDelete() {
-    if (!currentUser || currentUser.role !== 'Admin' || selectedRow === null) {
-        alert('Select a row and ensure you have admin privileges');
-        return;
+// Add keyframe animations
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
     }
+`;
+document.head.appendChild(styleSheet);
 
-    if (confirm('Are you sure you want to delete this animal?')) {
-        const animals = DataService.getFilteredAnimals(document.getElementById('rescue-type').value);
-        DataService.deleteAnimal(animals[selectedRow].animalId);
-        selectedRow = null;
-        updateDashboard(document.getElementById('rescue-type').value);
-    }
-}
+// Initialize modes
+let focusModeEnabled = false;
+let highContrastEnabled = false;
+
+// High contrast toggle button
+const highContrastBtn = document.querySelector('.high-contrast-toggle');
+highContrastBtn.addEventListener('click', () => {
+    highContrastEnabled = !highContrastEnabled;
+    document.body.classList.toggle('high-contrast');
+    highContrastBtn.style.background = highContrastEnabled ? '#0d6efd' : 'rgba(255, 255, 255, 0.9)';
+    highContrastBtn.style.color = highContrastEnabled ? '#fff' : '#000';
+});
+
+// Enhanced focus handling
+document.querySelectorAll('a, button, input, [tabindex="0"]').forEach(element => {
+    element.addEventListener('focus', () => {
+        cursor.style.transform = 'scale(1.5)';
+        cursor.style.border = '2px solid #0d6efd';
+    });
+    
+    element.addEventListener('blur', () => {
+        cursor.style.transform = 'scale(1)';
+        cursor.style.border = '2px solid #fff';
+    });
+});

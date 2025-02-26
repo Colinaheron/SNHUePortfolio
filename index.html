@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colin Aheron - Computer Science Portfolio</title>
+    <meta name="description" content="An accessible portfolio showcasing computer science projects with focus on neurodiversity and special needs accommodation">
+    <title>Colin Aheron - Accessible Computer Science Portfolio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -54,7 +55,28 @@
         }
     </style>
 </head>
-<body>
+<body class="animated-bg">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+    
+    <!-- Sensory Break Button -->
+    <!-- Accessibility Controls -->
+    <div class="accessibility-controls">
+        <button class="high-contrast-toggle" aria-label="Toggle high contrast mode" title="Toggle high contrast mode">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2v20"/>
+            </svg>
+        </button>
+        <div class="sensory-break" role="button" aria-label="Take a sensory break" tabindex="0">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+    </div>
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
@@ -62,7 +84,47 @@
                 <div class="col-lg-8 mx-auto text-center">
                     <h1 class="display-4 mb-4">Colin Aheron</h1>
                     <p class="lead mb-4">Computer Science Portfolio - SNHU Capstone Project</p>
-                    <a href="shelter.html" class="btn btn-light btn-lg">View Enhanced Project</a>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="shelter.html" class="btn btn-light btn-lg">View Enhanced Project</a>
+                        <a href="dashboard_optimized.html" class="btn btn-success btn-lg">Try Optimized Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Accessibility Focus -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-heading">Designing for Neurodiversity</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card enhancement-card h-100">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">Interactive Engagement</h3>
+                            <p>Our enhanced interface features:</p>
+                            <ul class="list-unstyled">
+                                <li>✓ Custom cursor for improved focus tracking</li>
+                                <li>✓ Visual feedback on all interactive elements</li>
+                                <li>✓ Animated transitions for better engagement</li>
+                                <li>✓ Progress indicators for content navigation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card enhancement-card h-100">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">Sensory Considerations</h3>
+                            <p>Accessibility features include:</p>
+                            <ul class="list-unstyled">
+                                <li>✓ Adjustable visual stimulation levels</li>
+                                <li>✓ Built-in sensory break timer</li>
+                                <li>✓ Focus mode for reduced distractions</li>
+                                <li>✓ High-contrast visual elements</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,23 +136,31 @@
             <h2 class="section-heading">Professional Self-Assessment</h2>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Throughout my journey in the Computer Science program at SNHU, I've developed a comprehensive skill set that spans across various domains of software development. The capstone project, which involved transforming a Python-based animal shelter dashboard into a modern web application, exemplifies my growth and capabilities in the field.</p>
+                    <p>Throughout my journey in the Computer Science program at SNHU, I've developed a deep understanding of inclusive design and accessibility. My focus has been on creating technology that accommodates diverse needs, particularly in an era where digital engagement requires careful consideration of neurodiversity and cognitive accessibility. The coursework, combined with this ePortfolio, demonstrates my commitment to building inclusive, engaging, and accessible software solutions.</p>
+
+                    <h3 class="h4 mt-4">Professional Growth and Competencies</h3>
                     
-                    <h3 class="h4 mt-4">Key Competencies</h3>
-                    <ul class="list-unstyled">
-                        <li class="mb-3">
-                            <strong>Collaborative Development:</strong>
-                            <p>Implemented clear code organization and documentation practices, creating comprehensive README files and following industry-standard version control practices to facilitate team collaboration.</p>
-                        </li>
-                        <li class="mb-3">
-                            <strong>Stakeholder Communication:</strong>
-                            <p>Developed skills in creating clear user documentation, implementing intuitive UI/UX design, and providing clear feedback for user actions, ensuring effective communication with all stakeholders.</p>
-                        </li>
-                        <li class="mb-3">
-                            <strong>Technical Expertise:</strong>
-                            <p>Demonstrated proficiency in data structures, algorithms, software engineering, database management, and security implementation across various platforms and languages.</p>
-                        </li>
-                    </ul>
+                    <div class="mb-4">
+                        <h4 class="h5">Accessible Development</h4>
+                        <p>My experience in creating accessible software solutions has focused on accommodating various cognitive and sensory needs. I've implemented features like adjustable stimulation levels, focus modes, and interactive elements that maintain engagement while preventing cognitive overload. These implementations follow WCAG guidelines and modern accessibility best practices.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4 class="h5">Universal Design Principles</h4>
+                        <p>Through extensive research and implementation, I've developed expertise in universal design principles that accommodate neurodiversity. This includes creating interfaces with adjustable stimulation levels, implementing clear visual hierarchies, and providing multiple ways to interact with content. My work demonstrates how technology can be both engaging and accessible to users with diverse cognitive needs.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4 class="h5">Technical Excellence</h4>
+                        <p>My coursework in Data Structures and Algorithms has equipped me with strong problem-solving skills and the ability to optimize code for performance. I've implemented complex data structures from scratch and analyzed algorithmic efficiency in various contexts. In Database Management Systems, I designed normalized database schemas and implemented secure data access patterns. The Security courses enhanced my understanding of secure coding practices, where I conducted vulnerability assessments and implemented authentication systems using industry best practices.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4 class="h5">Portfolio Integration</h4>
+                        <p>The artifacts in this portfolio demonstrate the culmination of these skills, showcasing my ability to deliver comprehensive software solutions. The transformation of a Python-based dashboard into a modern web application exemplifies my full-stack development capabilities, security implementation, and user-centered design approach. This project, along with others in my coursework, reflects my commitment to creating efficient, secure, and user-friendly software solutions that meet real-world needs.</p>
+                    </div>
+
+                    <p>Through these experiences and the development of this ePortfolio, I've not only enhanced my technical capabilities but also shaped my professional values around code quality, security, and user-centered design. I'm well-prepared to contribute to software development teams and tackle complex technical challenges in the evolving landscape of computer science.</p>
                 </div>
             </div>
         </div>
@@ -101,7 +171,7 @@
         <div class="container">
             <h2 class="section-heading">Project Enhancements</h2>
             <div class="row g-4">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card enhancement-card">
                         <div class="card-body">
                             <h3 class="h5 mb-3">Software Design & Engineering</h3>
@@ -113,7 +183,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card enhancement-card">
                         <div class="card-body">
                             <h3 class="h5 mb-3">Algorithms & Data Structure</h3>
@@ -125,7 +195,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card enhancement-card">
                         <div class="card-body">
                             <h3 class="h5 mb-3">Databases</h3>
@@ -134,6 +204,20 @@
                                 <li>✓ Implemented secure data persistence</li>
                                 <li>✓ Enhanced data integrity and validation</li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card enhancement-card bg-success text-white">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">Optimized Dashboard</h3>
+                            <ul class="list-unstyled">
+                                <li>✓ Improved performance for large datasets</li>
+                                <li>✓ Enhanced filtering and pagination</li>
+                                <li>✓ Interactive map and chart visualizations</li>
+                                <li>✓ Efficient data processing algorithms</li>
+                            </ul>
+                            <a href="dashboard_optimized.html" class="btn btn-light btn-sm mt-2">Try Now</a>
                         </div>
                     </div>
                 </div>
@@ -160,8 +244,12 @@
                         <li>✓ Responsive design for all devices</li>
                         <li>✓ Enhanced user experience</li>
                     </ul>
+                    <div class="alert alert-success" role="alert">
+                        <strong>New!</strong> Optimized dashboard now available with improved performance for large datasets, enhanced filtering, and interactive visualizations.
+                    </div>
                     <div class="d-flex gap-3">
                         <a href="shelter.html" class="btn btn-primary">View Enhanced Project</a>
+                        <a href="dashboard_optimized.html" class="btn btn-success">Try Optimized Dashboard</a>
                         <a href="original.html" class="btn btn-outline-primary">View Original Version & Code Review</a>
                     </div>
                     <div class="mt-4">
@@ -190,5 +278,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
