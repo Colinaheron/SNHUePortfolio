@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Dashboard - Grazioso Salvare (Full Dataset)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <!-- Custom Dashboard Styles -->
+    <style>
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            flex-direction: column;
+        }
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .filter-panel {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .filter-title {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        .filter-row {
+            margin-bottom: 10px;
+        }
+        .stats-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        .stats-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .stats-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        #data-table {
+            background-color: white;
+        }
+        #data-table thead th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        #data-table tbody tr.selected {
+            background-color: rgba(13, 110, 253, 0.2) !important;
+        }
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .error-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        #pagination-controls {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            margin-top: -20px;
+        }
+        .progress-container {
+            width: 80%;
+            height: 20px;
+            background-color: #f3f3f3;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .dataset-toggle-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .form-switch {
+            padding-left: 2.5em;
+        }
+        .form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+            margin-left: -2.5em;
+        }
+    </style>
+</head>
+<body class="animated-bg">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+    
+    <!-- Accessibility Controls -->
+    <div class="accessibility-controls">
+        <button class="high-contrast-toggle" aria-label="Toggle high contrast mode" title="Toggle high contrast mode">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2v20"/>
+            </svg>
+        </button>
+        <div class="sensory-break" role="button" aria-label="Take a sensory break" tabindex="0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+        </div>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="shelter.html">
+                <img src="rect5.png" alt="Grazioso Salvare Logo" class="nav-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="shelter.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="services.html">Training Programs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="success-stories.html">Success Stories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard_full.html">Training Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <!-- Authentication Section -->
+        <div id="auth-section" class="mb-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- Login Form -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Login to Dashboard</h5>
+                            <form id="login-form">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="username" placeholder="Enter Username" aria-label="Username">
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" class="form-control" id="password" placeholder="Enter Password" aria-label="Password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </form>
+                            <div id="login-output" class="mt-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Register New Account</h5>
+                            <form id="register-form">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="register-username" placeholder="New Username" aria-label="New Username">
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" class="form-control" id="register-password" placeholder="New Password" aria-label="New Password">
+                                </div>
+                                <div class="mb-3">
+                                    <select class="form-select" id="register-role" aria-label="Select user role">
+                                        <option value="">Select Role</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Analyst">Analyst</option>
+                                        <option value="Viewer">Viewer</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success">Register</button>
+                            </form>
+                            <div id="register-output" class="mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content (Initially Hidden) -->
+        <div id="dashboard-content" style="display: none;">
+            <!-- Dataset Toggle -->
+            <div class="dataset-toggle-container">
+                <div>
+                    <h5 class="mb-0">Dataset Selection</h5>
+                    <p class="text-muted mb-0">Toggle to use the full CSV dataset</p>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="dataset-toggle" aria-label="Toggle full dataset">
+                    <label class="form-check-label" for="dataset-toggle">Use Full Dataset</label>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="stats-card text-center">
+                        <div class="stats-value" id="total-count">0</div>
+                        <div class="stats-label">Total Animals</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card text-center">
+                        <div class="stats-value" id="most-common-type">None</div>
+                        <div class="stats-label">Most Common Animal Type</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card text-center">
+                        <div class="stats-value" id="adoption-rate">0.0%</div>
+                        <div class="stats-label">Adoption Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Filter Panel -->
+            <div class="filter-panel mb-4">
+                <h5 class="filter-title">Filter Animals</h5>
+                <div class="row filter-row">
+                    <div class="col-md-3">
+                        <label for="rescue-type" class="form-label">Rescue Type</label>
+                        <select class="form-select" id="rescue-type" aria-label="Select rescue type">
+                            <option value="Reset">All Types</option>
+                            <option value="Water">Water Rescue</option>
+                            <option value="Mountain">Mountain or Wilderness Rescue</option>
+                            <option value="Disaster">Disaster or Individual Tracking</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="animal-type-filter" class="form-label">Animal Type</label>
+                        <select class="form-select" id="animal-type-filter" aria-label="Filter by animal type">
+                            <option value="">All Types</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="outcome-type-filter" class="form-label">Outcome</label>
+                        <select class="form-select" id="outcome-type-filter" aria-label="Filter by outcome type">
+                            <option value="">All Outcomes</option>
+                            <option value="Adoption">Adoption</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Return to Owner">Return to Owner</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sex-filter" class="form-label">Sex</label>
+                        <select class="form-select" id="sex-filter" aria-label="Filter by sex">
+                            <option value="">All</option>
+                            <option value="Intact Male">Intact Male</option>
+                            <option value="Neutered Male">Neutered Male</option>
+                            <option value="Intact Female">Intact Female</option>
+                            <option value="Spayed Female">Spayed Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 text-end">
+                        <button class="btn btn-secondary" id="reset-filters">Reset All Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-responsive mb-4">
+                <table class="table table-striped" id="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Animal Type</th>
+                            <th>Breed</th>
+                            <th>Age</th>
+                            <th>Sex</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div id="pagination-controls" class="mt-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <button id="prev-page" class="btn btn-sm btn-outline-primary">Previous</button>
+                        <span id="page-info" class="mx-2">Page 1 of 1</span>
+                        <button id="next-page" class="btn btn-sm btn-outline-primary">Next</button>
+                    </div>
+                    <div>
+                        <span id="showing-info">Showing 0 of 0 animals</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CRUD Buttons (Admin Only) -->
+            <div id="crud-buttons" class="mb-4" style="display: none;">
+                <button class="btn btn-success" id="create-btn">Create</button>
+                <button class="btn btn-primary" id="update-btn">Update</button>
+                <button class="btn btn-danger" id="delete-btn">Delete</button>
+            </div>
+
+            <!-- Visualization Section -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <canvas id="chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="map" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer py-5 mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <img src="Grazioso-Salvare-Logo.png" alt="Grazioso Salvare Logo" class="footer-logo mb-3">
+                    <p>Transforming shelter animals into rescue heroes through specialized training programs.</p>
+                </div>
+                <div class="col-lg-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Programs</a></li>
+                        <li><a href="success-stories.html">Success Stories</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Training Programs</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="services.html#water">Water Rescue</a></li>
+                        <li><a href="services.html#mountain">Mountain Rescue</a></li>
+                        <li><a href="services.html#disaster">Disaster Response</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li>123 Rescue Drive</li>
+                        <li>Austin, TX 78701</li>
+                        <li>Tel: (555) 123-4567</li>
+                        <li>Email: info@grazioso-salvare.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="small mb-0">&copy; 2024 Grazioso Salvare. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="small mb-0">Website by Colin Aheron - SNHU Computer Science Capstone Project</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Custom Scripts -->
+    <script src="data.js"></script>
+    <script src="csv_loader_simple.js"></script>
+    <script src="dashboard_simple.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
