@@ -3,94 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animal Shelter Dashboard - Grazioso Salvare</title>
+    <title>Training Dashboard - Grazioso Salvare</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <!-- Custom Dashboard Styles -->
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
-        .header {
-            background-color: #343a40;
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
             color: white;
-            padding: 20px 0;
-            margin-bottom: 30px;
+            flex-direction: column;
         }
-        .card {
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .filter-panel {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
             margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        .filter-title {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        .filter-row {
+            margin-bottom: 10px;
+        }
         .stats-card {
-            text-align: center;
-            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
         }
         .stats-value {
             font-size: 2rem;
             font-weight: bold;
             color: #0d6efd;
         }
-        .filter-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .stats-label {
+            color: #6c757d;
+            font-size: 0.9rem;
         }
-        .table-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .table-responsive {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
         }
-        .selected {
+        #data-table tbody tr.selected {
             background-color: rgba(13, 110, 253, 0.2) !important;
         }
-        #map {
-            height: 400px;
-            width: 100%;
-            border-radius: 5px;
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
         }
-        .chart-container {
-            height: 400px;
-            width: 100%;
+        .error-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Database background styles */
+        .table-responsive, .filter-panel, .stats-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .table-responsive {
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        #data-table {
+            background-color: white;
+        }
+        
+        #data-table thead th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        #pagination-controls {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            margin-top: -20px;
         }
     </style>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
 </head>
-<body>
-    <div class="header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h1>Animal Shelter Dashboard</h1>
-                    <p class="mb-0">Grazioso Salvare - Rescue Animal Training</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0">Logged in as: <span id="user-display">Guest</span></p>
-                </div>
-            </div>
+<body class="animated-bg">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+    
+    <!-- Accessibility Controls -->
+    <div class="accessibility-controls">
+        <button class="high-contrast-toggle" aria-label="Toggle high contrast mode" title="Toggle high contrast mode">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2v20"/>
+            </svg>
+        </button>
+        <div class="sensory-break" role="button" aria-label="Take a sensory break" tabindex="0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
         </div>
     </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="shelter.html">
+                <img src="rect5.png" alt="Grazioso Salvare Logo" class="nav-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="shelter.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="services.html">Training Programs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="success-stories.html">Success Stories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard_optimized.html">Training Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <div class="container">
-        <!-- Login Section -->
-        <div id="login-section" class="row justify-content-center mb-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Login to Dashboard</h5>
-                        <form id="login-form">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" value="admin">
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" value="admin123">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Login</button>
-                        </form>
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <!-- Authentication Section -->
+        <div id="auth-section" class="mb-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- Login Form -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Login to Dashboard</h5>
+                            <form id="login-form">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="username" placeholder="Enter Username" aria-label="Username">
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" class="form-control" id="password" placeholder="Enter Password" aria-label="Password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </form>
+                            <div id="login-output" class="mt-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Register New Account</h5>
+                            <form id="register-form">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="register-username" placeholder="New Username" aria-label="New Username">
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" class="form-control" id="register-password" placeholder="New Password" aria-label="New Password">
+                                </div>
+                                <div class="mb-3">
+                                    <select class="form-select" id="register-role" aria-label="Select user role">
+                                        <option value="">Select Role</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Analyst">Analyst</option>
+                                        <option value="Viewer">Viewer</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success">Register</button>
+                            </form>
+                            <div id="register-output" class="mt-2"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,123 +234,121 @@
             <!-- Statistics Cards -->
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <div class="card stats-card">
+                    <div class="stats-card text-center">
                         <div class="stats-value" id="total-count">0</div>
                         <div class="stats-label">Total Animals</div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card stats-card">
+                    <div class="stats-card text-center">
                         <div class="stats-value" id="most-common-type">None</div>
-                        <div class="stats-label">Most Common Type</div>
+                        <div class="stats-label">Most Common Animal Type</div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card stats-card">
-                        <div class="stats-value" id="adoption-rate">0%</div>
+                    <div class="stats-card text-center">
+                        <div class="stats-value" id="adoption-rate">0.0%</div>
                         <div class="stats-label">Adoption Rate</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Filter Section -->
-            <div class="filter-section mb-4">
-                <h5>Filter Animals</h5>
-                <div class="row">
-                    <div class="col-md-3 mb-3">
+            <!-- Enhanced Filter Panel -->
+            <div class="filter-panel mb-4">
+                <h5 class="filter-title">Filter Animals</h5>
+                <div class="row filter-row">
+                    <div class="col-md-3">
                         <label for="rescue-type" class="form-label">Rescue Type</label>
-                        <select class="form-select" id="rescue-type">
-                            <option value="all">All Types</option>
-                            <option value="water">Water Rescue</option>
-                            <option value="mountain">Mountain Rescue</option>
-                            <option value="disaster">Disaster Rescue</option>
+                        <select class="form-select" id="rescue-type" aria-label="Select rescue type">
+                            <option value="Reset">All Types</option>
+                            <option value="Water">Water Rescue</option>
+                            <option value="Mountain">Mountain or Wilderness Rescue</option>
+                            <option value="Disaster">Disaster or Individual Tracking</option>
                         </select>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="animal-type" class="form-label">Animal Type</label>
-                        <select class="form-select" id="animal-type">
-                            <option value="all">All Types</option>
+                    <div class="col-md-3">
+                        <label for="animal-type-filter" class="form-label">Animal Type</label>
+                        <select class="form-select" id="animal-type-filter" aria-label="Filter by animal type">
+                            <option value="">All Types</option>
                             <option value="Dog">Dog</option>
                             <option value="Cat">Cat</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="breed" class="form-label">Breed</label>
-                        <select class="form-select" id="breed">
-                            <option value="all">All Breeds</option>
+                    <div class="col-md-3">
+                        <label for="outcome-type-filter" class="form-label">Outcome</label>
+                        <select class="form-select" id="outcome-type-filter" aria-label="Filter by outcome type">
+                            <option value="">All Outcomes</option>
+                            <option value="Adoption">Adoption</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Return to Owner">Return to Owner</option>
                         </select>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="age" class="form-label">Age</label>
-                        <select class="form-select" id="age">
-                            <option value="all">All Ages</option>
-                            <option value="puppy">Puppy/Kitten</option>
-                            <option value="young">Young</option>
-                            <option value="adult">Adult</option>
-                            <option value="senior">Senior</option>
+                    <div class="col-md-3">
+                        <label for="sex-filter" class="form-label">Sex</label>
+                        <select class="form-select" id="sex-filter" aria-label="Filter by sex">
+                            <option value="">All</option>
+                            <option value="Intact Male">Intact Male</option>
+                            <option value="Neutered Male">Neutered Male</option>
+                            <option value="Intact Female">Intact Female</option>
+                            <option value="Spayed Female">Spayed Female</option>
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-3">
                     <div class="col-12 text-end">
-                        <button class="btn btn-secondary" id="reset-filters">Reset Filters</button>
+                        <button class="btn btn-secondary" id="reset-filters">Reset All Filters</button>
                     </div>
                 </div>
             </div>
 
             <!-- Data Table -->
-            <div class="table-container mb-4">
-                <h5>Animal Data</h5>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover" id="animal-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Animal Type</th>
-                                <th>Breed</th>
-                                <th>Age</th>
-                                <th>Sex</th>
-                                <th>Outcome</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            <!-- Table data will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div id="pagination" class="mt-3">
-                            <button id="prev-page" class="btn btn-sm btn-outline-primary">Previous</button>
-                            <span id="page-info" class="mx-2">Page 1 of 1</span>
-                            <button id="next-page" class="btn btn-sm btn-outline-primary">Next</button>
-                        </div>
+            <div class="table-responsive mb-4">
+                <table class="table table-striped" id="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Animal Type</th>
+                            <th>Breed</th>
+                            <th>Age</th>
+                            <th>Sex</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div id="pagination-controls" class="mt-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <button id="prev-page" class="btn btn-sm btn-outline-primary">Previous</button>
+                        <span id="page-info" class="mx-2">Page 1 of 1</span>
+                        <button id="next-page" class="btn btn-sm btn-outline-primary">Next</button>
                     </div>
-                    <div class="col-md-6 text-end">
-                        <div class="mt-3">
-                            <span id="showing-info">Showing 0 of 0 animals</span>
-                        </div>
+                    <div>
+                        <span id="showing-info">Showing 0 of 0 animals</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Visualizations -->
-            <div class="row mb-4">
+            <!-- CRUD Buttons (Admin Only) -->
+            <div id="crud-buttons" class="mb-4" style="display: none;">
+                <button class="btn btn-success" id="create-btn">Create</button>
+                <button class="btn btn-primary" id="update-btn">Update</button>
+                <button class="btn btn-danger" id="delete-btn">Delete</button>
+            </div>
+
+            <!-- Visualization Section -->
+            <div class="row">
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Breed Distribution</h5>
-                            <div class="chart-container">
-                                <canvas id="breed-chart"></canvas>
-                            </div>
+                            <canvas id="chart"></canvas>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Animal Locations</h5>
-                            <div id="map"></div>
+                            <div id="map" style="height: 400px;"></div>
                         </div>
                     </div>
                 </div>
@@ -225,476 +356,61 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer py-5 mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <img src="Grazioso-Salvare-Logo.png" alt="Grazioso Salvare Logo" class="footer-logo mb-3">
+                    <p>Transforming shelter animals into rescue heroes through specialized training programs.</p>
+                </div>
+                <div class="col-lg-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Programs</a></li>
+                        <li><a href="success-stories.html">Success Stories</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Training Programs</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="services.html#water">Water Rescue</a></li>
+                        <li><a href="services.html#mountain">Mountain Rescue</a></li>
+                        <li><a href="services.html#disaster">Disaster Response</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li>123 Rescue Drive</li>
+                        <li>Austin, TX 78701</li>
+                        <li>Tel: (555) 123-4567</li>
+                        <li>Email: info@grazioso-salvare.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="small mb-0">&copy; 2024 Grazioso Salvare. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="small mb-0">Website by Colin Aheron - SNHU Computer Science Capstone Project</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script>
-        // Sample data (simulating data from the full CSV)
-        const sampleData = [
-            {
-                name: "Neptune",
-                animalType: "Dog",
-                breed: "Labrador Retriever Mix",
-                age: "3 years",
-                sex: "Neutered Male",
-                outcome: "Available",
-                lat: 30.5066578739455,
-                long: -97.3408780722188
-            },
-            {
-                name: "Poseidon",
-                animalType: "Dog",
-                breed: "Newfoundland",
-                age: "2 years",
-                sex: "Neutered Male",
-                outcome: "Available",
-                lat: 30.7595748121648,
-                long: -97.5523753807133
-            },
-            {
-                name: "Marina",
-                animalType: "Dog",
-                breed: "Chesapeake Bay Retriever",
-                age: "4 years",
-                sex: "Spayed Female",
-                outcome: "Available",
-                lat: 30.3188063374257,
-                long: -97.7240376703891
-            },
-            {
-                name: "Summit",
-                animalType: "Dog",
-                breed: "German Shepherd",
-                age: "3 years",
-                sex: "Neutered Male",
-                outcome: "Available",
-                lat: 30.6525984560228,
-                long: -97.7419963476444
-            },
-            {
-                name: "Alpine",
-                animalType: "Dog",
-                breed: "Alaskan Malamute",
-                age: "2 years",
-                sex: "Spayed Female",
-                outcome: "Available",
-                lat: 30.4525984560228,
-                long: -97.6419963476444
-            },
-            {
-                name: "Everest",
-                animalType: "Dog",
-                breed: "Siberian Husky",
-                age: "4 years",
-                sex: "Neutered Male",
-                outcome: "Available",
-                lat: 30.5525984560228,
-                long: -97.5419963476444
-            },
-            {
-                name: "Hero",
-                animalType: "Dog",
-                breed: "Golden Retriever",
-                age: "3 years",
-                sex: "Neutered Male",
-                outcome: "Available",
-                lat: 30.3525984560228,
-                long: -97.4419963476444
-            },
-            {
-                name: "Scout",
-                animalType: "Dog",
-                breed: "Bloodhound",
-                age: "2 years",
-                sex: "Neutered Male",
-                outcome: "Available",
-                lat: 30.2525984560228,
-                long: -97.3419963476444
-            },
-            {
-                name: "Guardian",
-                animalType: "Dog",
-                breed: "Rottweiler",
-                age: "4 years",
-                sex: "Spayed Female",
-                outcome: "Available",
-                lat: 30.1525984560228,
-                long: -97.2419963476444
-            }
-        ];
-
-        // Generate more sample data to simulate a large dataset
-        const breeds = ["Labrador Retriever", "German Shepherd", "Golden Retriever", "Beagle", "Bulldog", 
-                       "Poodle", "Boxer", "Siberian Husky", "Dachshund", "Great Dane"];
-        const animalTypes = ["Dog", "Cat"];
-        const outcomes = ["Adoption", "Transfer", "Return to Owner", "Euthanasia", "Died"];
-        const sexes = ["Intact Male", "Neutered Male", "Intact Female", "Spayed Female"];
-        const ages = ["1 month", "3 months", "6 months", "1 year", "2 years", "3 years", "4 years"];
-
-        // Generate additional simulated data
-        for (let i = 0; i < 100; i++) {
-            sampleData.push({
-                name: `Pet${i}`,
-                animalType: animalTypes[Math.floor(Math.random() * animalTypes.length)],
-                breed: breeds[Math.floor(Math.random() * breeds.length)],
-                age: ages[Math.floor(Math.random() * ages.length)],
-                sex: sexes[Math.floor(Math.random() * sexes.length)],
-                outcome: outcomes[Math.floor(Math.random() * outcomes.length)],
-                lat: 30 + Math.random(),
-                long: -97 - Math.random()
-            });
-        }
-
-        // Rescue type filters
-        const rescueTypeFilters = {
-            water: ["Labrador Retriever Mix", "Chesapeake Bay Retriever", "Newfoundland"],
-            mountain: ["German Shepherd", "Alaskan Malamute", "Old English Sheepdog", "Siberian Husky", "Rottweiler"],
-            disaster: ["Doberman Pinscher", "German Shepherd", "Golden Retriever", "Bloodhound", "Rottweiler"]
-        };
-
-        // Global variables
-        let filteredData = [...sampleData];
-        let currentPage = 1;
-        const rowsPerPage = 10;
-        let map = null;
-        let markers = [];
-        let chart = null;
-
-        // DOM elements
-        const loginSection = document.getElementById('login-section');
-        const dashboardContent = document.getElementById('dashboard-content');
-        const loginForm = document.getElementById('login-form');
-        const userDisplay = document.getElementById('user-display');
-        const tableBody = document.getElementById('table-body');
-        const totalCount = document.getElementById('total-count');
-        const mostCommonType = document.getElementById('most-common-type');
-        const adoptionRate = document.getElementById('adoption-rate');
-        const rescueTypeSelect = document.getElementById('rescue-type');
-        const animalTypeSelect = document.getElementById('animal-type');
-        const breedSelect = document.getElementById('breed');
-        const ageSelect = document.getElementById('age');
-        const resetFiltersBtn = document.getElementById('reset-filters');
-        const prevPageBtn = document.getElementById('prev-page');
-        const nextPageBtn = document.getElementById('next-page');
-        const pageInfo = document.getElementById('page-info');
-        const showingInfo = document.getElementById('showing-info');
-
-        // Initialize the dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            // Login form submission
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                // Simple authentication (in a real app, this would be more secure)
-                if (username === 'admin' && password === 'admin123') {
-                    loginSection.style.display = 'none';
-                    dashboardContent.style.display = 'block';
-                    userDisplay.textContent = username;
-                    
-                    // Initialize the dashboard components
-                    initializeFilters();
-                    updateTable();
-                    initializeMap();
-                    initializeChart();
-                    updateStatistics();
-                } else {
-                    alert('Invalid username or password');
-                }
-            });
-            
-            // Filter event listeners
-            rescueTypeSelect.addEventListener('change', applyFilters);
-            animalTypeSelect.addEventListener('change', applyFilters);
-            breedSelect.addEventListener('change', applyFilters);
-            ageSelect.addEventListener('change', applyFilters);
-            resetFiltersBtn.addEventListener('click', resetFilters);
-            
-            // Pagination event listeners
-            prevPageBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    updateTable();
-                }
-            });
-            
-            nextPageBtn.addEventListener('click', () => {
-                const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    updateTable();
-                }
-            });
-        });
-
-        // Initialize filter options
-        function initializeFilters() {
-            // Populate breed dropdown
-            const uniqueBreeds = [...new Set(sampleData.map(animal => animal.breed))];
-            breedSelect.innerHTML = '<option value="all">All Breeds</option>';
-            uniqueBreeds.forEach(breed => {
-                const option = document.createElement('option');
-                option.value = breed;
-                option.textContent = breed;
-                breedSelect.appendChild(option);
-            });
-        }
-
-        // Apply filters to the data
-        function applyFilters() {
-            const rescueType = rescueTypeSelect.value;
-            const animalType = animalTypeSelect.value;
-            const breed = breedSelect.value;
-            const age = ageSelect.value;
-            
-            // Start with all data
-            filteredData = [...sampleData];
-            
-            // Apply rescue type filter
-            if (rescueType !== 'all') {
-                const breedFilter = rescueTypeFilters[rescueType] || [];
-                filteredData = filteredData.filter(animal => breedFilter.includes(animal.breed));
-            }
-            
-            // Apply animal type filter
-            if (animalType !== 'all') {
-                filteredData = filteredData.filter(animal => animal.animalType === animalType);
-            }
-            
-            // Apply breed filter
-            if (breed !== 'all') {
-                filteredData = filteredData.filter(animal => animal.breed === breed);
-            }
-            
-            // Apply age filter
-            if (age !== 'all') {
-                // This is a simplified age filter
-                if (age === 'puppy') {
-                    filteredData = filteredData.filter(animal => animal.age.includes('month'));
-                } else if (age === 'young') {
-                    filteredData = filteredData.filter(animal => animal.age.includes('1 year'));
-                } else if (age === 'adult') {
-                    filteredData = filteredData.filter(animal => 
-                        animal.age.includes('2 year') || animal.age.includes('3 year'));
-                } else if (age === 'senior') {
-                    filteredData = filteredData.filter(animal => 
-                        animal.age.includes('4 year') || animal.age.includes('5 year') || 
-                        animal.age.includes('6 year') || animal.age.includes('7 year'));
-                }
-            }
-            
-            // Reset to first page and update
-            currentPage = 1;
-            updateTable();
-            updateChart();
-            updateMap();
-            updateStatistics();
-        }
-
-        // Reset all filters
-        function resetFilters() {
-            rescueTypeSelect.value = 'all';
-            animalTypeSelect.value = 'all';
-            breedSelect.value = 'all';
-            ageSelect.value = 'all';
-            
-            filteredData = [...sampleData];
-            currentPage = 1;
-            
-            updateTable();
-            updateChart();
-            updateMap();
-            updateStatistics();
-        }
-
-        // Update the data table
-        function updateTable() {
-            tableBody.innerHTML = '';
-            
-            const startIndex = (currentPage - 1) * rowsPerPage;
-            const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
-            const displayData = filteredData.slice(startIndex, endIndex);
-            
-            displayData.forEach((animal, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${animal.name || 'Unnamed'}</td>
-                    <td>${animal.animalType}</td>
-                    <td>${animal.breed}</td>
-                    <td>${animal.age}</td>
-                    <td>${animal.sex}</td>
-                    <td>${animal.outcome}</td>
-                `;
-                
-                // Add click event to show on map
-                row.addEventListener('click', () => {
-                    // Remove selected class from all rows
-                    document.querySelectorAll('#animal-table tbody tr').forEach(r => {
-                        r.classList.remove('selected');
-                    });
-                    
-                    // Add selected class to clicked row
-                    row.classList.add('selected');
-                    
-                    // Update map to show this animal
-                    updateMapForAnimal(animal);
-                });
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Update pagination info
-            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-            pageInfo.textContent = `Page ${currentPage} of ${totalPages || 1}`;
-            showingInfo.textContent = `Showing ${startIndex + 1}-${endIndex} of ${filteredData.length} animals`;
-            
-            // Enable/disable pagination buttons
-            prevPageBtn.disabled = currentPage === 1;
-            nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
-        }
-
-        // Initialize the map
-        function initializeMap() {
-            map = L.map('map').setView([30.75, -97.48], 10);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-            
-            updateMap();
-        }
-
-        // Update the map with filtered data
-        function updateMap() {
-            // Clear existing markers
-            markers.forEach(marker => map.removeLayer(marker));
-            markers = [];
-            
-            // Add markers for the first 50 animals (to avoid overwhelming the map)
-            const mapData = filteredData.slice(0, 50);
-            
-            mapData.forEach(animal => {
-                const marker = L.marker([animal.lat, animal.long])
-                    .addTo(map)
-                    .bindPopup(`
-                        <strong>${animal.name || 'Unnamed'}</strong><br>
-                        ${animal.breed}<br>
-                        ${animal.age}, ${animal.sex}
-                    `);
-                
-                markers.push(marker);
-            });
-            
-            // If we have markers, fit the map to show all of them
-            if (markers.length > 0) {
-                const group = new L.featureGroup(markers);
-                map.fitBounds(group.getBounds().pad(0.1));
-            }
-        }
-
-        // Update map to focus on a specific animal
-        function updateMapForAnimal(animal) {
-            // Clear existing markers
-            markers.forEach(marker => map.removeLayer(marker));
-            markers = [];
-            
-            // Add marker for the selected animal
-            const marker = L.marker([animal.lat, animal.long])
-                .addTo(map)
-                .bindPopup(`
-                    <strong>${animal.name || 'Unnamed'}</strong><br>
-                    ${animal.breed}<br>
-                    ${animal.age}, ${animal.sex}
-                `)
-                .openPopup();
-            
-            markers.push(marker);
-            
-            // Center map on the animal
-            map.setView([animal.lat, animal.long], 13);
-        }
-
-        // Initialize the chart
-        function initializeChart() {
-            const ctx = document.getElementById('breed-chart').getContext('2d');
-            chart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
-                            '#FF9F40', '#8AC249', '#EA5545', '#F46A9B', '#EF9B20'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Top 10 Breeds'
-                        }
-                    }
-                }
-            });
-            
-            updateChart();
-        }
-
-        // Update the chart with filtered data
-        function updateChart() {
-            // Count breeds
-            const breedCounts = {};
-            filteredData.forEach(animal => {
-                const breed = animal.breed || 'Unknown';
-                breedCounts[breed] = (breedCounts[breed] || 0) + 1;
-            });
-            
-            // Sort breeds by count (descending) and take top 10
-            const sortedBreeds = Object.entries(breedCounts)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10);
-            
-            // Update chart data
-            chart.data.labels = sortedBreeds.map(item => item[0]);
-            chart.data.datasets[0].data = sortedBreeds.map(item => item[1]);
-            chart.update();
-        }
-
-        // Update statistics
-        function updateStatistics() {
-            // Total count
-            totalCount.textContent = filteredData.length;
-            
-            // Most common animal type
-            const typeCounts = {};
-            filteredData.forEach(animal => {
-                const type = animal.animalType || 'Unknown';
-                typeCounts[type] = (typeCounts[type] || 0) + 1;
-            });
-            
-            let mostCommonAnimalType = 'None';
-            let maxCount = 0;
-            for (const [type, count] of Object.entries(typeCounts)) {
-                if (count > maxCount) {
-                    mostCommonAnimalType = type;
-                    maxCount = count;
-                }
-            }
-            
-            mostCommonType.textContent = mostCommonAnimalType;
-            
-            // Adoption rate
-            const adoptionCount = filteredData.filter(animal => animal.outcome === 'Adoption').length;
-            const rate = filteredData.length > 0 ? (adoptionCount / filteredData.length * 100).toFixed(1) : '0.0';
-            adoptionRate.textContent = `${rate}%`;
-        }
-    </script>
+    <!-- Custom Scripts -->
+    <script src="data.js"></script>
+    <script src="dashboard_optimized.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
