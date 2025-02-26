@@ -10,7 +10,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 // Cursor interactions
-document.querySelectorAll('a, button, .card, .sensory-break').forEach(element => {
+document.querySelectorAll('a, button, .card, .sensory-break, img').forEach(element => {
     element.addEventListener('mouseenter', () => {
         cursor.style.transform = 'scale(1.5)';
         cursor.style.border = '2px solid #0d6efd';
